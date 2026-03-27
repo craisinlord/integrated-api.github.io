@@ -227,28 +227,29 @@ If you are extending Integrated API in code or building a mod API on top of it, 
 
 #### Processors (`BuiltInRegistries.STRUCTURE_PROCESSOR`)
 
-- `block_removal_post_processor`
-- `flood_with_water_processor`
-- `replace_air_only_processor`
-- `replace_liquids_only_processor`
-- `spawner_randomizing_processor`
-- `fill_end_portal_frame_processor`
-- `remove_floating_blocks_processor`
-- `close_off_fluid_sources_processor`
-- `close_off_air_sources_processor`
-- `random_replace_with_properties_processor`
-- `waterlogging_fix_processor`
-- `waterlogging_when_replacing_water_processor`
-- `capped_structure_surface_processor`
-- `post_process_list_processor`
-- `windmill_bearing_processor`
-- `fluid_tank_processor`
-- `mechanical_bearing_processor`
-- `clockwork_bearing_processor`
-- `elevator_pulley_processor`
-- `tick_blocks_processor`
-- `integrated_block_replace_processor`
-- `workstation_processor`
+- `integrated_api:block_removal_post_processor`: Removes already-placed blocks listed in `remove_blocks`. Use it to strip helper blocks (like markers/jigsaws/placeholders) at the end of placement.
+- `integrated_api:flood_with_water_processor`: Floods eligible blocks at or below `flood_level` with water, waterlogs compatible blocks, and seals neighboring non-solid gaps with cracked stone bricks. Use for submerged/partially flooded ruins.
+- `integrated_api:replace_air_only_processor`: If the world block at position is air, it keeps air instead of placing your structure block (with `blocks_to_always_place` exceptions). Use to avoid filling caves/open air pockets.
+- `integrated_api:replace_liquids_only_processor`: If the world block has fluid, it keeps the fluid instead of placing your structure block (with `blocks_to_always_place` exceptions). Use to keep water/lava volume in fluid-heavy areas.
+- `integrated_api:spawner_randomizing_processor`: Rewrites spawner NBT from a weighted mob pool keyed by `integrated_api_spawner_resourcelocation`, with optional light limits and spawn timings; falls back to `spawner_replacement_block` if no mob is available. Use with `integrated_structure_spawners` datapack entries.
+- `integrated_api:fill_end_portal_frame_processor`: Randomly toggles End Portal Frame eyes using `probability_per_block`. Use to randomize portal completion rate.
+- `integrated_api:remove_floating_blocks_processor`: Cleans up invalid floating survivability blocks around edited air/fluid space. Use after heavy replacement/flood processors to remove floating plants/attachments.
+- `integrated_api:close_off_fluid_sources_processor`: Replaces neighboring source fluids around non-solid structure edges using `weighted_list_of_replacement_blocks`; supports `ignore_down` and `if_air_in_world`. Use to stop lava/water leakage into interiors.
+- `integrated_api:close_off_air_sources_processor`: Replaces neighboring air or mismatched fluid-adjacent blocks around fluid interiors using `weighted_list_of_replacement_blocks`. Use to seal underwater interiors from air pockets and fluid mixing seams.
+- `integrated_api:random_replace_with_properties_processor`: Replaces `input_block` with `output_block` or random from `output_blocks` at `probability`, while preserving shared blockstate properties. Use for palette variation without losing orientation/shape properties.
+- `integrated_api:waterlogging_fix_processor`: Forces any waterloggable placed block to `waterlogged=false`. Use when templates accidentally ship with bad waterlogged states.
+- `integrated_api:waterlogging_when_replacing_water_processor`: Sets waterloggable placed blocks to match whether the replaced world block was water and schedules a block tick when needed. Use for correct waterlogged behavior in submerged placement.
+- `integrated_api:capped_structure_surface_processor`: Runs a `delegate` processor only on surface-cap-style candidates; `allow_void_sides` controls edge behavior. Use when a processor should only affect top-shell/surface blocks.
+- `integrated_api:post_process_list_processor`: Runs `delegates` in sequence as a composed post-pass. Use to bundle multiple processors into one ordered pipeline.
+- `integrated_api:windmill_bearing_processor`: For Create windmill bearings, sets `QueueAssembly` and schedules a tick on placement. Use when your structure contains Create windmill bearings.
+- `integrated_api:fluid_tank_processor`: For Create fluid tanks, removes problematic `Luminosity` NBT and schedules a tick. Use to avoid generation-time tank/NBT issues.
+- `integrated_api:mechanical_bearing_processor`: For Create mechanical bearings, sets `QueueAssembly` and schedules a tick. Use when your structure contains Create mechanical bearings.
+- `integrated_api:clockwork_bearing_processor`: For Create clockwork bearings, sets `QueueAssembly` and schedules a tick. Use when your structure contains Create clockwork bearings.
+- `integrated_api:elevator_pulley_processor`: For Create elevator pulleys, sets `QueueAssembly` and schedules a tick. Use when your structure contains Create elevator pulleys.
+- `integrated_api:tick_blocks_processor`: Schedules immediate ticks for blocks in `blocks_to_tick`. Use to kickstart blocks that require first-tick activation (redstone/bubble-column style behavior).
+- `integrated_api:integrated_block_replace_processor`: If `required_mod` is loaded, replaces `input_block` (optionally matching `input_nbt`) with `output_block`/`output_blocks` at `probability`; can use `otherwise_block` when the mod is missing. Use for cross-mod compatibility swaps.
+- `integrated_api:workstation_processor`: Replaces `input_block` with a weighted output from `integrated_workstations` based on `workstation_type`, honoring `enable_integration`. Use for profession/workstation compatibility placeholders.
+
 
 #### Rule tests / pos rule tests
 
